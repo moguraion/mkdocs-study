@@ -1,0 +1,20 @@
+{
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "remoteUser": "vscode",
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "zsh",
+                "terminal.integrated.defaultProfile.osx": "zsh"
+            },
+            "extensions": [
+                "GitHub.copilot-chat",
+                "GitHub.copilot",
+                "ms-python.python"
+            ]
+        }
+    },
+    "postCreateCommand": "uv python install && uv lock && uv sync --frozen && uv run pre-commit install"
+}
