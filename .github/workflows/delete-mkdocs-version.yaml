@@ -1,0 +1,102 @@
+name: Build MkDocs with mike and create PR
+
+on:
+  workflow_dispatch:
+    inputs:
+      delete_doc_version:
+        type: string
+        required: true
+        description: delete version string
+
+env:
+  PR_BRANCH: gh-pages-${{ github.run_number }}
+  AUTO_COMMIT_USER_NAME: github-actions[bot]
+  AUTO_COMMIT_USER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+  DEFAULT_VERSION_ALIAS: latest
+
+permissions:
+  content: write
+  pull-requests: write
+
+jobs:
+  release-PR:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Set up Python
+        run: uv python install
+
+      - name: Install the project
+        run: uv sync --locked --all-extras --dev
+
+      - name: setup mkdocs project
+        env:
+          REF: ${{ github.ref }}
+        run: |
+          export VER=`echo "${REF##*/}"`
+          echo "version=${VER}" >> $GITHUB_ENV
+          git remote set-url origin https://github-actions:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}
+          git config --local user.name "${{ env.AUTO_COMMIT_USER_NAME }}"
+          git config --local user.email "${{ env.AUTO_COMMIT_USER_EMAIL }}"
+          git fetch
+
+      - name: make PR_BRANCH
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git checkout -b ${{ env.PR_BRANCH }} origin/gh-pages
+          git push origin ${{ env.PR_BRANCH }}
+          git checkout ${{ github.ref }}
+
+      - name: check mike list previous
+        continue-on-error: true
+        run: |
+          output=$(uv run mike list --branch ${{ env.PR_BRANCH }} | grep ${{ env.version }})
+
+          # 出力にエイリアス（角括弧）が含まれているかチェック
+          if echo "$output" | grep -q '\\[.*\\]'; then
+            echo "ALIAS_EXIST=true" >> $GITHUB_ENV
+          else
+            echo "ALIAS_EXIST=false" >> $GITHUB_ENV
+          fi
+
+          if [ -n "$output" ]; then
+            uv run mike delete --branch ${{ env.PR_BRANCH }} ${{ env.version }}
+          fi
+
+      - name: realias latest
+        if: env.ALIAS_FOUND == "true"
+        run: |
+          latest_version=$(uv run mike list --branch ${{ env.PR_BRANCH }} | head -n 1)
+          if [ -n "$latest_version" ]; then
+            uv run mike alias --branch ${{ env.PR_BRANCH }} $latest_version ${{ env.DEFAULT_VERSION_ALIAS }}
+            uv run mike set-default --branch ${{ env.PR_BRANCH }} --allow-empty ${{ env.DEFAULT_VERSION_ALIAS }}
+          fi
+
+      - name: checkout PR_BRANCH
+        run: |
+          git checkout ${{ env.PR_BRANCH }}
+
+      - name: pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Delete ${{ inputs.delete_doc_version }} doc
+          committer: GitHub <noreply@github.com>
+          author: ${{ env.AUTO_COMMIT_USER_NAME }} <${{ env.AUTO_COMMIT_USER_EMAIL }}>
+          signoff: false
+          branch: ${{ env.PR_BRANCH }}
+          base: gh-pages
+          delete-branch: true
+          title: Delete ${{ inputs.delete_doc_version }} doc
+          body: |
+            Delete ${{ inputs.delete_doc_version }}
+          labels: |
+            automated pr
+          draft: false
