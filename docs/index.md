@@ -10,6 +10,6 @@ This is practice page using MkDocs.
 
     This is an open detail block.
 
-??? deital
+??? detail
 
     This is an close detail block.

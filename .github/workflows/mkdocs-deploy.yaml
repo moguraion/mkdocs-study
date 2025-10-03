@@ -1,0 +1,88 @@
+name: Build MkDocs with mike and create PR
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - '*'
+
+env:
+  PR_BRANCH: gh-pages-${{ github.run_number }}
+
+jobs:
+  release-PR:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Set up Python
+        run: uv python install
+        with:
+          python-version-file: ".python-version"
+
+      - name: Install the project
+        run: uv sync --locked --all-extras --dev
+
+      - name: setup mkdocs project
+        if: ${{ success() }}
+        env:
+          REF: ${{ github.ref }}
+        run: |
+          export VER=`echo "${REF##*/}"`
+          echo "version=${VER}" >> $GITHUB_ENV
+          git remote set-url origin https://github-actions:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}
+          git config --local user.name "${GITHUB_ACTOR}"
+          git config --local user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+          git fetch
+
+      - name: make PR_BRANCH
+        if: ${{ success() }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git checkout -b ${{ env.PR_BRANCH }} origin/gh-pages
+          git push origin ${{ env.PR_BRANCH }}
+          git checkout ${{ github.ref }}
+
+      - name: check mike list previous
+        if: ${{ success() }}
+        continue-on-error: true
+        run: |
+          mike list --branch ${{ env.PR_BRANCH }} | grep ${{ env.version }}
+          if [ $? ]; then
+            mike delete --branch ${{ env.PR_BRANCH }} ${{ env.version }}
+          fi
+
+      - name: build mkdocs
+        if: ${{ success() }}
+        run: |
+          mike deploy --branch ${{ env.PR_BRANCH }} ${{ env.version }}
+
+      - name: checkout PR_BRANCH
+        if: ${{ success() }}
+        run: |
+          git checkout ${{ env.PR_BRANCH }}
+
+      - name: pull request
+        if: ${{ success() }}
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Update MkDocs
+          committer: GitHub <noreply@github.com>
+          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          signoff: false
+          branch: ${{ env.PR_BRANCH }}
+          base: gh-pages
+          delete-branch: true
+          title: 'Update MkDocs'
+          body: |
+            Update report
+          labels: |
+            automated pr
+          draft: false
