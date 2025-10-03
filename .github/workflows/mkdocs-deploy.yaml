@@ -30,7 +30,6 @@ jobs:
         run: uv sync --locked --all-extras --dev
 
       - name: setup mkdocs project
-        if: ${{ success() }}
         env:
           REF: ${{ github.ref }}
         run: |
@@ -42,16 +41,13 @@ jobs:
           git fetch
 
       - name: make PR_BRANCH
-        if: ${{ success() }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git checkout -b ${{ env.PR_BRANCH }} origin/gh-pages
-          # git push origin ${{ env.PR_BRANCH }}
           git checkout ${{ github.ref }}
 
       - name: check mike list previous
-        if: ${{ success() }}
         continue-on-error: true
         run: |
           uv run mike list --branch ${{ env.PR_BRANCH }} | grep ${{ env.version }}
@@ -68,19 +64,20 @@ jobs:
           fi
 
       - name: build mkdocs
-        if: ${{ success() }}
         run: |
           uv run mike deploy --branch ${{ env.PR_BRANCH }} ${{ env.version }}
           uv run mike alias --branch ${{ env.PR_BRANCH }} ${{ env.version }} ${{ env.DEFAULT_VERSION_ALIAS }}
           uv run mike set-default --branch ${{ env.PR_BRANCH }} --allow-empty ${{ env.DEFAULT_VERSION_ALIAS }}
 
       - name: checkout PR_BRANCH
-        if: ${{ success() }}
         run: |
           git checkout ${{ env.PR_BRANCH }}
 
+      - name: push PR_BRANCH to origin
+        run: |
+          git push origin ${{ env.PR_BRANCH }}
+
       - name: pull request
-        if: ${{ success() }}
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
