@@ -12,6 +12,10 @@ env:
   AUTO_COMMIT_USER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
   DEFAULT_VERSION_ALIAS: latest
 
+permissions:
+  content: write
+  pull-requests: write
+
 jobs:
   release-PR:
     runs-on: ubuntu-latest
@@ -75,7 +79,7 @@ jobs:
           git checkout ${{ env.PR_BRANCH }}
 
       - name: pull request
-        uses: peter-evans/create-pull-request@v3
+        uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: Update MkDocs
