@@ -45,6 +45,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git checkout -b ${{ env.PR_BRANCH }} origin/gh-pages
+          git push origin ${{ env.PR_BRANCH }}
           git checkout ${{ github.ref }}
 
       - name: check mike list previous
@@ -72,10 +73,6 @@ jobs:
       - name: checkout PR_BRANCH
         run: |
           git checkout ${{ env.PR_BRANCH }}
-
-      - name: push PR_BRANCH to origin
-        run: |
-          git push origin ${{ env.PR_BRANCH }}
 
       - name: pull request
         uses: peter-evans/create-pull-request@v3
