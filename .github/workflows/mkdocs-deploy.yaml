@@ -36,8 +36,6 @@ jobs:
           export VER=`echo "${REF##*/}"`
           echo "version=${VER}" >> $GITHUB_ENV
           git remote set-url origin https://github-actions:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}
-          # git config --local user.name "${GITHUB_ACTOR}"
-          # git config --local user.email "${GITHUB_ACTOR}@users.noreply.github.com"
           git config --local user.name "${{ env.AUTO_COMMIT_USER_NAME }}"
           git config --local user.email "${{ env.AUTO_COMMIT_USER_EMAIL }}"
           git fetch
@@ -60,10 +58,17 @@ jobs:
             uv run mike delete --branch ${{ env.PR_BRANCH }} ${{ env.version }}
           fi
 
+          uv run mike list --branch ${{ env.PR_BRANCH }} | grep latest
+          if [ $? ]; then
+            uv run mike delete --branch ${{ env.PR_BRANCH }} latest
+          fi
+
       - name: build mkdocs
         if: ${{ success() }}
         run: |
           uv run mike deploy --branch ${{ env.PR_BRANCH }} ${{ env.version }}
+          uv run mike alias --branch ${{ env.PR_BRANCH }} latest
+          uv run mike set-default --branch ${{ env.PR_BRANCH }} --allow-empty latest
 
       - name: checkout PR_BRANCH
         if: ${{ success() }}
