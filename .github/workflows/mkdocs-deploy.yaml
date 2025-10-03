@@ -8,6 +8,8 @@ on:
 
 env:
   PR_BRANCH: gh-pages-${{ github.run_number }}
+  AUTO_COMMIT_USER_NAME: github-actions[bot]
+  AUTO_COMMIT_USER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
 
 jobs:
   release-PR:
@@ -36,8 +38,8 @@ jobs:
           git remote set-url origin https://github-actions:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}
           # git config --local user.name "${GITHUB_ACTOR}"
           # git config --local user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "${{ env.AUTO_COMMIT_USER_NAME }}"
+          git config --local user.email "${{ env.AUTO_COMMIT_USER_EMAIL }}"
           git fetch
 
       - name: make PR_BRANCH
@@ -75,7 +77,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: Update MkDocs
           committer: GitHub <noreply@github.com>
-          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          author: ${{ env.AUTO_COMMIT_USER_NAME }} <${{ env.AUTO_COMMIT_USER_EMAIL }}>
           signoff: false
           branch: ${{ env.PR_BRANCH }}
           base: gh-pages
