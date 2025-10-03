@@ -2,6 +2,11 @@
   {
     "version": "build-environment",
     "title": "build-environment",
+    "aliases": []
+  },
+  {
+    "version": "0.1.1",
+    "title": "0.1.1",
     "aliases": [
       "latest"
     ]
