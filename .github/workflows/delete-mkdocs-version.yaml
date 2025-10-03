@@ -71,7 +71,7 @@ jobs:
           fi
 
       - name: realias latest
-        if: env.ALIAS_FOUND == "true"
+        if: ${{ env.ALIAS_FOUND == "true" }}
         run: |
           latest_version=$(uv run mike list --branch ${{ env.PR_BRANCH }} | head -n 1)
           if [ -n "$latest_version" ]; then
