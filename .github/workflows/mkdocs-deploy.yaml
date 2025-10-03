@@ -59,6 +59,9 @@ jobs:
             uv run mike delete --branch ${{ env.PR_BRANCH }} ${{ env.version }}
           fi
 
+      - name: check mike list default version alias
+        continue-on-error: true
+        run: |
           uv run mike list --branch ${{ env.PR_BRANCH }} | grep ${{ env.DEFAULT_VERSION_ALIAS }}
           if [ $? ]; then
             uv run mike delete --branch ${{ env.PR_BRANCH }} ${{ env.DEFAULT_VERSION_ALIAS }}
