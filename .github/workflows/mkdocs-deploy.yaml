@@ -51,15 +51,15 @@ jobs:
         if: ${{ success() }}
         continue-on-error: true
         run: |
-          mike list --branch ${{ env.PR_BRANCH }} | grep ${{ env.version }}
+          uv run mike list --branch ${{ env.PR_BRANCH }} | grep ${{ env.version }}
           if [ $? ]; then
-            mike delete --branch ${{ env.PR_BRANCH }} ${{ env.version }}
+            uv run mike delete --branch ${{ env.PR_BRANCH }} ${{ env.version }}
           fi
 
       - name: build mkdocs
         if: ${{ success() }}
         run: |
-          mike deploy --branch ${{ env.PR_BRANCH }} ${{ env.version }}
+          uv run mike deploy --branch ${{ env.PR_BRANCH }} ${{ env.version }}
 
       - name: checkout PR_BRANCH
         if: ${{ success() }}
