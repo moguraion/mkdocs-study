@@ -67,7 +67,7 @@ jobs:
         if: ${{ success() }}
         run: |
           uv run mike deploy --branch ${{ env.PR_BRANCH }} ${{ env.version }}
-          uv run mike alias --branch ${{ env.PR_BRANCH }} latest
+          uv run mike alias --branch ${{ env.PR_BRANCH }} ${{ env.version }} latest
           uv run mike set-default --branch ${{ env.PR_BRANCH }} --allow-empty latest
 
       - name: checkout PR_BRANCH
