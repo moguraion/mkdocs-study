@@ -39,8 +39,6 @@ jobs:
         env:
           REF: ${{ github.ref }}
         run: |
-          export VER=`echo "${REF##*/}"`
-          echo "version=${VER}" >> $GITHUB_ENV
           git remote set-url origin https://github-actions:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}
           git config --local user.name "${{ env.AUTO_COMMIT_USER_NAME }}"
           git config --local user.email "${{ env.AUTO_COMMIT_USER_EMAIL }}"
@@ -57,7 +55,7 @@ jobs:
       - name: check mike list previous
         continue-on-error: true
         run: |
-          output=$(uv run mike list --branch ${{ env.PR_BRANCH }} | grep ${{ env.version }})
+          output=$(uv run mike list --branch ${{ env.PR_BRANCH }} | grep ${{ inputs.delete_doc_version }} || [[ $? == 1 ]])
 
           # 出力にエイリアス（角括弧）が含まれているかチェック
           if echo "$output" | grep -q '\\[.*\\]'; then
@@ -67,11 +65,11 @@ jobs:
           fi
 
           if [ -n "$output" ]; then
-            uv run mike delete --branch ${{ env.PR_BRANCH }} ${{ env.version }}
+            uv run mike delete --branch ${{ env.PR_BRANCH }} ${{ inputs.delete_doc_version }}
           fi
 
       - name: realias latest
-        if: ${{ env.ALIAS_FOUND == 'true' }}
+        if: ${{ env.ALIAS_EXIST == 'true' }}
         run: |
           latest_version=$(uv run mike list --branch ${{ env.PR_BRANCH }} | head -n 1)
           if [ -n "$latest_version" ]; then
