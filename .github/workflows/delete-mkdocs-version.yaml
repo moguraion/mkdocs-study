@@ -9,7 +9,7 @@ on:
         description: delete version string
 
 env:
-  PR_BRANCH: gh-pages-${{ github.run_number }}
+  PR_BRANCH: delete-specified-version-doc-on-gh-pages-${{ github.run_number }}
   AUTO_COMMIT_USER_NAME: github-actions[bot]
   AUTO_COMMIT_USER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
   DEFAULT_VERSION_ALIAS: latest
