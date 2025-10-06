@@ -1,5 +1,5 @@
 .venv/
 site/
 
-/styles/*
-!/styles/config/
+.github/styles/*
+!.github/styles/config/
