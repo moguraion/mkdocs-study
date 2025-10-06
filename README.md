@@ -2,13 +2,19 @@
 
 ## このリポジトリの機能
 
-- ローカルマシンでの執筆
+- 文章校正
+
+  - [Vale](https://vale.sh/)(英文用)
+
+- ローカルマシンでの MkDocs 確認
 
   - VSCodeのデバッグ(F5)でChromeブラウザが起動し、ドキュメントのリアルタイム表示
 
-  [launch.json](.vscode/launch.json)
+  - 関連設定ファイル
 
-  [tasks.json](.vscode/tasks.json)
+    - [launch.json](.vscode/launch.json)
+
+    - [tasks.json](.vscode/tasks.json)
 
 ## mkdocsに追加している機能
 

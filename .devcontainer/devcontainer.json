@@ -1,7 +1,5 @@
 {
-    "build": {
-        "dockerfile": "Dockerfile"
-    },
+    "image": "mcr.microsoft.com/vscode/devcontainers/base:ubuntu",
     "remoteUser": "vscode",
     "customizations": {
         "vscode": {
@@ -12,9 +10,14 @@
             "extensions": [
                 "GitHub.copilot-chat",
                 "GitHub.copilot",
-                "ms-python.python"
+                "ms-python.python",
+                "chrischinchilla.vale-vscode"
             ]
         }
     },
-    "postCreateCommand": "uv python install && uv lock && uv sync --frozen && uv run pre-commit install"
+    "postCreateCommand": "uv python install && uv lock && uv sync --frozen && uv run pre-commit install && vale sync",
+    "features": {
+        "ghcr.io/shinepukur/devcontainer-features/vale:1": {},
+        "ghcr.io/devcontainers-extra/features/uv:1": {}
+    }
 }

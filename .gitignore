@@ -1,2 +1,5 @@
 .venv/
 site/
+
+/styles/*
+!/styles/config/
