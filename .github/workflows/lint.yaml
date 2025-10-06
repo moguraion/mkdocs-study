@@ -1,0 +1,17 @@
+name: Lint
+
+on:
+  push:
+
+permissions:
+  pull-requests: write
+
+jobs:
+  vale:
+    name: runner / vale
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: errata-ai/vale-action@v2.1.1
+        with:
+          fail_on_error: true
