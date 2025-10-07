@@ -29,8 +29,9 @@ jobs:
           BRANCHES=$(git branch -r --contains)
           echo $BRANCHES
           echo ${{ github.event.repository.master_branch }}
+          echo ${{ github.event.repository.default_branch }}
           for BRANCH in $BRANCHES ; do
-            if [[ "$BRANCH" == "${{ github.event.repository.master_branch }}" ]]; then
+            if [[ "$BRANCH" == "origin/${{ github.event.repository.master_branch }}" ]]; then
               exit 0
             fi
           done

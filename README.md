@@ -16,7 +16,7 @@
 
     - [tasks.json](.vscode/tasks.json)
 
-- gh-pages
+- gh-pages操作
 
   - タグ付けバージョンドキュメントの発行[ワークフロー](.github/workflows/build-mkdocs.yaml)
 
