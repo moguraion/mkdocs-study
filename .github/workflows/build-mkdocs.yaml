@@ -58,26 +58,20 @@ jobs:
           git fetch
 
       - name: make PR_BRANCH
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git checkout -b ${{ env.PR_BRANCH }} origin/gh-pages
           git push origin ${{ env.PR_BRANCH }}
           git checkout ${{ github.ref }}
 
       - name: check mike list previous
-        continue-on-error: true
         run: |
-          uv run mike list --branch ${{ env.PR_BRANCH }} | grep ${{ env.version }}
-          if [ $? ]; then
+          if uv run mike list --branch ${{ env.PR_BRANCH }} | grep -q ${{ env.version }}; then
             uv run mike delete --branch ${{ env.PR_BRANCH }} ${{ env.version }}
           fi
 
       - name: check mike list default version alias
-        continue-on-error: true
         run: |
-          uv run mike list --branch ${{ env.PR_BRANCH }} | grep ${{ env.DEFAULT_VERSION_ALIAS }}
-          if [ $? ]; then
+          if uv run mike list --branch ${{ env.PR_BRANCH }} | grep -q ${{ env.DEFAULT_VERSION_ALIAS }}; then
             uv run mike delete --branch ${{ env.PR_BRANCH }} ${{ env.DEFAULT_VERSION_ALIAS }}
           fi
 
