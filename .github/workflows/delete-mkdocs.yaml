@@ -45,15 +45,12 @@ jobs:
           git fetch
 
       - name: make PR_BRANCH
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git checkout -b ${{ env.PR_BRANCH }} origin/gh-pages
           git push origin ${{ env.PR_BRANCH }}
           git checkout ${{ github.ref }}
 
       - name: check mike list previous
-        continue-on-error: true
         run: |
           output=$(uv run mike list --branch ${{ env.PR_BRANCH }} | grep ${{ inputs.delete_doc_version }} || [[ $? == 1 ]])
 
