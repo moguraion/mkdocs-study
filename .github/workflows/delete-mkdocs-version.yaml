@@ -59,9 +59,9 @@ jobs:
 
           # 出力にエイリアス（角括弧）が含まれているかチェック
           if echo "$output" | grep -q '\[.*\]'; then
-            echo "ALIAS_EXIST=false" >> $GITHUB_ENV
-          else
             echo "ALIAS_EXIST=true" >> $GITHUB_ENV
+          else
+            echo "ALIAS_EXIST=false" >> $GITHUB_ENV
           fi
 
           if [ -n "$output" ]; then
