@@ -16,6 +16,13 @@
 
     - [tasks.json](.vscode/tasks.json)
 
+- gh-pages
+
+  - タグ付けバージョンドキュメントの発行[ワークフロー](.github/workflows/build-mkdocs.yaml)
+
+  - 指定バージョンドキュメントの削除[ワークフロー](.github/workflows/delete-mkdocs.yaml)
+
+
 ## mkdocsに追加している機能
 
 - [mkdocs-static-i18n](https://github.com/ultrabug/mkdocs-static-i18n)
