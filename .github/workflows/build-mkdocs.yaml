@@ -89,16 +89,16 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: Update MkDocs
+          commit-message: 'Publish ${{ env.version }} document'
           committer: GitHub <noreply@github.com>
           author: ${{ env.AUTO_COMMIT_USER_NAME }} <${{ env.AUTO_COMMIT_USER_EMAIL }}>
           signoff: false
           branch: ${{ env.PR_BRANCH }}
           base: gh-pages
           delete-branch: true
-          title: 'Update MkDocs'
+          title: 'Publish ${{ env.version }} document'
           body: |
-            Update report
+            Publish document
           labels: |
             automated pr
           draft: false
