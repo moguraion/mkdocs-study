@@ -16,10 +16,12 @@ pre-commit:
             glob: "*.{yaml,yml}"
 
     - name: Vale
+      glob: "*.en.md"
       group:
         jobs:
           - run: vale sync
           - run: vale --output=line --minAlertLevel=error {staged_files}
 
     - name: textlint
+      glob: "*.ja.md"
       run: textlint {staged_files}

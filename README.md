@@ -4,9 +4,15 @@
 
 - 文章校正
 
-  - [Vale](https://vale.sh/)(英文用)
+  - 英文用
 
-- ローカルマシンでの MkDocs 確認
+    - [Vale](https://vale.sh/)
+
+  - 和文用
+
+    - [textlint](https://textlint.org/)
+
+- ローカルマシンでのMkDocs確認
 
   - VSCodeのデバッグ(F5)でChromeブラウザが起動し、ドキュメントのリアルタイム表示
 
@@ -21,7 +27,6 @@
   - タグ付けバージョンドキュメントの発行[ワークフロー](.github/workflows/build-mkdocs.yaml)
 
   - 指定バージョンドキュメントの削除[ワークフロー](.github/workflows/delete-mkdocs.yaml)
-
 
 ## mkdocsに追加している機能
 

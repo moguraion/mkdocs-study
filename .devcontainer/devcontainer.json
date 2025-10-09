@@ -14,7 +14,8 @@
         "GitHub.copilot",
         "ms-python.python",
         "chrischinchilla.vale-vscode",
-        "3w36zj6.textlint"
+        "3w36zj6.textlint",
+        "DavidAnson.vscode-markdownlint"
       ]
     }
   },
