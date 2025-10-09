@@ -1,9 +1,9 @@
 ARG UV_VERSION=0.7.20
-ARG UBUNTU_VERSION=ubuntu-22.04
+ARG BASE_IMAGE_TAG=ubuntu
 
 FROM ghcr.io/astral-sh/uv:$UV_VERSION AS uv
 
-FROM mcr.microsoft.com/vscode/devcontainers/base:$UBUNTU_VERSION
+FROM mcr.microsoft.com/vscode/devcontainers/base:$BASE_IMAGE_TAG
 
 ARG VALE_VERSION=3.12.0
 ENV VALE_ARCHIVE=vale_${VALE_VERSION}_Linux_64-bit.tar.gz
@@ -16,16 +16,15 @@ RUN  apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Valeをインストール
-RUN curl -o /tmp/${VALE_ARCHIVE} -OLs https://github.com/errata-ai/vale/releases/download/v${VALE_VERSION}/${VALE_ARCHIVE} \
-    && tar xzvf /tmp/${VALE_ARCHIVE} -C /usr/local/bin/ \
-    && rm /tmp/${VALE_ARCHIVE} /usr/local/bin/README.md /usr/local/bin/LICENSE
+# RUN curl -o /tmp/${VALE_ARCHIVE} -OLs https://github.com/errata-ai/vale/releases/download/v${VALE_VERSION}/${VALE_ARCHIVE} \
+#     && tar xzvf /tmp/${VALE_ARCHIVE} -C /usr/local/bin/ \
+#     && rm /tmp/${VALE_ARCHIVE} /usr/local/bin/README.md /usr/local/bin/LICENSE
 
 # textlintをインストール
 RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
     && apt-get install -y nodejs
 RUN npm init --yes && \
     npm install -g \
-        zenn-cli \
         textlint \
         textlint-filter-rule-allowlist \
         textlint-filter-rule-comments \
