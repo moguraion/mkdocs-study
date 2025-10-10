@@ -34,3 +34,9 @@ prepare-commit-msg:
     - script: prepare-commit-msg
       interactive: true
       runner: uv run
+
+post-commit:
+  jobs:
+    - name: clean up script on post-commit
+      script: post-commit
+      runner: uv run
