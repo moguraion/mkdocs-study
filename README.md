@@ -36,6 +36,12 @@
 
   - [Lefthook](https://lefthook.dev/)
 
+  - 関連設定ファイル
+
+    - [.lefthook.yaml](.lefthook.yaml)
+
+    - [.lefthook/](.lefthook/)
+
 ## mkdocsに追加している機能
 
 - [mkdocs-static-i18n](https://github.com/ultrabug/mkdocs-static-i18n)

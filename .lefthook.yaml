@@ -23,5 +23,14 @@ pre-commit:
           - run: vale --output=line --minAlertLevel=error {staged_files}
 
     - name: textlint
-      glob: "*.ja.md"
+      glob:
+        - "*.ja.md"
+        - "README.md"
       run: textlint {staged_files}
+
+prepare-commit-msg:
+  jobs:
+    - run: 'echo "Git args: {1} {2} {3}"'
+    - script: prepare-commit-msg
+      interactive: true
+      runner: uv run
