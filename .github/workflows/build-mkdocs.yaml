@@ -98,7 +98,7 @@ jobs:
           delete-branch: true
           title: 'Publish ${{ env.version }} document'
           body: |
-            Publish document
+            Publish ${{ env.version }} document
           labels: |
             automated pr
           draft: false

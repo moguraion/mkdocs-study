@@ -1,23 +1,28 @@
 {
-    "image": "mcr.microsoft.com/vscode/devcontainers/base:ubuntu",
-    "remoteUser": "vscode",
-    "customizations": {
-        "vscode": {
-            "settings": {
-                "terminal.integrated.defaultProfile.linux": "zsh",
-                "terminal.integrated.defaultProfile.osx": "zsh"
-            },
-            "extensions": [
-                "GitHub.copilot-chat",
-                "GitHub.copilot",
-                "ms-python.python",
-                "chrischinchilla.vale-vscode"
-            ]
-        }
-    },
-    "postCreateCommand": "uv python install && uv lock && uv sync --frozen && uv run pre-commit install && vale sync",
-    "features": {
-        "ghcr.io/shinepukur/devcontainer-features/vale:1": {},
-        "ghcr.io/devcontainers-extra/features/uv:1": {}
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "remoteUser": "vscode",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.defaultProfile.osx": "zsh"
+      },
+      "extensions": [
+        "GitHub.copilot-chat",
+        "GitHub.copilot",
+        "ms-python.python",
+        "chrischinchilla.vale-vscode",
+        "3w36zj6.textlint",
+        "DavidAnson.vscode-markdownlint"
+      ]
     }
+  },
+  "features": {
+    // featuresでValeをインストールすると拡張機能の"chrischinchilla.vale-vscode"が正常に動く?
+    // そうでない場合、(恐らく今のimageでは)glibc3.38, 3.39 not foundエラーで動かない
+    "ghcr.io/shinepukur/devcontainer-features/vale:1": {}
+  },
+  "postCreateCommand": "uv python install && uv lock && uv sync --frozen && uv run lefthook install -f && vale sync"
 }

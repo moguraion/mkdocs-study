@@ -1,0 +1,42 @@
+pre-commit:
+  parallel: true
+  jobs:
+    - name: pre-commit-hooks
+      env:
+        PRE_COMMIT_REPO: https://github.com/pre-commit/pre-commit-hooks
+        PRE_COMMIT_REF: v4.4.0
+      group:
+        jobs:
+          - run: pre-commit try-repo --ref $PRE_COMMIT_REF $PRE_COMMIT_REPO check-merge-conflict
+          - run: pre-commit try-repo --ref $PRE_COMMIT_REF $PRE_COMMIT_REPO trailing-whitespace
+          - run: pre-commit try-repo --ref $PRE_COMMIT_REF $PRE_COMMIT_REPO mixed-line-ending
+          - run: pre-commit try-repo --ref $PRE_COMMIT_REF $PRE_COMMIT_REPO end-of-file-fixer
+          - run: pre-commit try-repo --ref $PRE_COMMIT_REF $PRE_COMMIT_REPO check-added-large-files
+          - run: pre-commit try-repo --ref $PRE_COMMIT_REF $PRE_COMMIT_REPO check-yaml
+            glob: "*.{yaml,yml}"
+
+    - name: Vale
+      glob: "*.en.md"
+      group:
+        jobs:
+          - run: vale sync
+          - run: vale --output=line --minAlertLevel=error {staged_files}
+
+    - name: textlint
+      glob:
+        - "*.ja.md"
+        - "README.md"
+      run: textlint {staged_files}
+
+prepare-commit-msg:
+  jobs:
+    - run: 'echo "Git args: {1} {2} {3}"'
+    - script: prepare-commit-msg
+      interactive: true
+      runner: uv run
+
+post-commit:
+  jobs:
+    - name: clean up script on post-commit
+      script: post-commit
+      runner: uv run

@@ -4,9 +4,19 @@
 
 - 文章校正
 
-  - [Vale](https://vale.sh/)(英文用)
+  - 英文用
 
-- ローカルマシンでの MkDocs 確認
+    - [Vale](https://vale.sh/)
+
+  - 和文用
+
+    - [textlint](https://textlint.org/)
+
+  - Markdown用
+
+    - [vscode-markdownlint](https://github.com/DavidAnson/vscode-markdownlint)
+
+- ローカルマシンでのMkDocs確認
 
   - VSCodeのデバッグ(F5)でChromeブラウザが起動し、ドキュメントのリアルタイム表示
 
@@ -22,6 +32,15 @@
 
   - 指定バージョンドキュメントの削除[ワークフロー](.github/workflows/delete-mkdocs.yaml)
 
+- pre-commit
+
+  - [Lefthook](https://lefthook.dev/)
+
+  - 関連設定ファイル
+
+    - [.lefthook.yaml](.lefthook.yaml)
+
+    - [.lefthook/](.lefthook/)
 
 ## mkdocsに追加している機能
 

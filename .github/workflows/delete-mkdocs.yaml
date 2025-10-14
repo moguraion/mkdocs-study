@@ -82,7 +82,7 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: Delete ${{ inputs.delete_doc_version }} doc
+          commit-message: Delete ${{ inputs.delete_doc_version }} document
           committer: GitHub <noreply@github.com>
           author: ${{ env.AUTO_COMMIT_USER_NAME }} <${{ env.AUTO_COMMIT_USER_EMAIL }}>
           signoff: false
@@ -91,7 +91,7 @@ jobs:
           delete-branch: true
           title: Delete ${{ inputs.delete_doc_version }} doc
           body: |
-            Delete ${{ inputs.delete_doc_version }}
+            Delete ${{ inputs.delete_doc_version }} document
           labels: |
             automated pr
           draft: false

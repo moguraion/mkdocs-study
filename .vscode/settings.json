@@ -1,5 +1,6 @@
 {
     "vale.enableSpellcheck": true,
+    "textlint.configPath": "${workspaceFolder}/.textlintrc",
     "files.trimTrailingWhitespace": true,
     "files.insertFinalNewline": true
 }
